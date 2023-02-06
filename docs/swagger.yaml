@@ -1,0 +1,45 @@
+definitions:
+  dto.APIResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+      status_code:
+        example: "0"
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /healthcheck:
+    get:
+      consumes:
+      - '*/*'
+      description: Get the status of server and version
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.APIResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/dto.APIResponse'
+      summary: Show the status of server.
+      tags:
+      - root
+swagger: "2.0"
