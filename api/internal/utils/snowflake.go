@@ -9,7 +9,5 @@ func GenerateSnowflakeID() (snowflake.ID, error) {
 	}
 
 	id := node.Generate()
-
-	// newID := xid.ID.String()
 	return id, nil
 }

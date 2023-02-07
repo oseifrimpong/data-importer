@@ -7,7 +7,7 @@ import (
 )
 
 type DataRepo interface {
-	Create(data *models.Data) error
+	Create(data []*models.Data) error
 	Retrieve() (dataList []*models.Data, err error)
 }
 
@@ -19,8 +19,10 @@ func NewDataRepository(db *gorm.DB) DataRepo {
 	return &repo{db: db}
 }
 
-func (r *repo) Create(data *models.Data) error {
-
+func (r *repo) Create(data []*models.Data) error {
+	if err := r.db.CreateInBatches(data, len(data)).Error; err != nil {
+		return err
+	}
 	return nil
 }
 

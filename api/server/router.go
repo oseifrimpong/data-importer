@@ -54,7 +54,7 @@ func (ds *dserver) dataRoutes(api *gin.RouterGroup) {
 // @Failure 400,404 {object} dto.APIResponse
 // @Failure 500 {object} dto.APIResponse
 // @Failure default {object} dto.APIResponse
-// @Router /healthcheck [get]
+// @Router api/healthcheck [get]
 func (ds *dserver) root(api *gin.RouterGroup) {
 	h := api.Group("/")
 	{

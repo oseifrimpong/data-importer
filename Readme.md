@@ -1,4 +1,4 @@
-# Coinhako Test
+# OHLC Data API
 
 ## RestFul API for data processing
 
