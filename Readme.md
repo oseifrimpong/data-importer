@@ -34,7 +34,7 @@ A RESTful api to upload and process OHLC data into database.
 - Make a copy of `env.example.com` to `env`
 - Install [Go](https://go.dev/doc/install)
 - Install [PostgreSQL](https://www.postgresql.org/download/)
-- Run sql statement in this [file](api/static/migrations/init_db.sql). *It change values to your database credentials.*
+- Run sql statement in this [file](api/static/migrations/init_db.sql). *You might need change values to your database credentials and not run this. Don't run this if your postgres server is a fresh install.* 
 - Run `go test -v ./...` to run tests
 - Run `go run main.go` to start up application
 
@@ -57,3 +57,5 @@ A RESTful api to upload and process OHLC data into database.
 - Add more unit and integration test.
 - Feature to avoid duplication.
 - Indexing records to enable faster query
+- Add `pattern matching` query to search api symbol field.
+

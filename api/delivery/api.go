@@ -106,12 +106,12 @@ func (d *dataController) Retrieve(ctx *gin.Context) {
 	args.PageNum, _ = strconv.Atoi(ctx.DefaultQuery("page_num", "0"))
 	args.PageSize, _ = strconv.Atoi(ctx.DefaultQuery("page_size", "50"))
 
-	args.High = ctx.Param("high")
-	args.Low = ctx.Param("low")
-	args.Unix, _ = strconv.ParseInt(ctx.Param("unix"), 10, 64)
-	args.Open = ctx.Param("open")
-	args.Close = ctx.Param("close")
-	args.Symbol = ctx.Param("symbol")
+	args.High = ctx.DefaultQuery("high", "")
+	args.Low = ctx.DefaultQuery("low", "")
+	args.Unix, _ = strconv.ParseInt(ctx.DefaultQuery("unix", ""), 10, 64)
+	args.Open = ctx.DefaultQuery("open", "")
+	args.Close = ctx.DefaultQuery("close", "")
+	args.Symbol = ctx.DefaultQuery("symbol", "")
 
 	if err := utils.SearchValidation(args); err != nil {
 		d.logger.Error(utils.RETRIEVE_FAILED, zap.Error(err))

@@ -10,7 +10,6 @@ type SearchParams struct {
 	PageNum  int    `json:"page_num"`
 	PageSize int    `json:"page_size"`
 	Sort     string `json:"sort"`
-	Search   string `json:"search"`
 	Unix     int64  `json:"unix"`
 	Symbol   string `json:"symbol"`
 	Open     string `json:"open"`

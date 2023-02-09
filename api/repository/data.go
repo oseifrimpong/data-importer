@@ -34,7 +34,14 @@ func (r *repo) Retrieve(queryParams *dto.SearchParams) (dataList map[string]inte
 
 	offset := (queryParams.PageNum - 1) * queryParams.PageSize
 	sqlBuilder := r.db.Limit(queryParams.PageSize).Offset(offset).Order(queryParams.Sort)
-	if err = sqlBuilder.Model(&models.Data{}).Where(queryParams.Search).Find(&data).Error; err != nil {
+	if err = sqlBuilder.Model(&models.Data{}).
+		Where("high IN (?)", queryParams.High).
+		Or("open IN (?)", queryParams.Open).
+		Or("unix IN (?)", queryParams.Unix).
+		Or("close IN (?)", queryParams.Close).
+		Or("low IN (?)", queryParams.Low).
+		Or("symbol IN (?)", queryParams.Symbol).
+		Find(&data).Error; err != nil {
 		return nil, err
 	}
 
