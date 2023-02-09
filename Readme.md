@@ -15,7 +15,7 @@ A RESTful api to upload and process OHLC data into database.
 - PostgreSQL
 - Docker
 
-## Table Design
+## Data Model Design
 
 | column     | Description                                    | Data type |
 | ---------- | ---------------------------------------------- | --------- |
