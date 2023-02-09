@@ -1,20 +1,15 @@
-TAG := teas/backend:latest
+TAG := ohlc-data-api:latest
 
 build:
-	@echo "Building Backend docker image"
+	@echo "Building docker image"
 	@docker build -f deploy/docker/Dockerfile -t $(TAG) .
 
 start:
-	@echo "Starting Backend..."
+	@echo "Starting ..."
 	@sh ./deploy/scripts/up.sh
 	@echo "Generating Swagger"
 	swag init
 
-start-dev:
-	@echo "Starting Backend..."
-	@sh ./deploy/scripts/up-dev.sh
-	@echo "Generating Swagger"
-	swag init
 		
 stop:
 	@echo "Stopping Backend..."

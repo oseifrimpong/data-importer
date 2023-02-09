@@ -2,19 +2,19 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"ohlc-data-api/api/config"
 	"ohlc-data-api/api/server"
+
 	"os"
 
-	"github.com/gin-contrib/pprof"
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"go.uber.org/zap"
 )
 
 // @title           OHLC Data API
-// @version         2.0
+// @version         1.0
 // @description     This is a data API for processing and uploading OHLC data.
 // @termsOfService  http://swagger.io/terms/
 
@@ -35,33 +35,35 @@ func main() {
 	}
 }
 
+var logger *zap.Logger
+
 func run() error {
 
 	switch gin.Mode() {
 	case gin.ReleaseMode:
-		// logger = config.Logger()
+		logger = config.Logger()
 	default:
 		err := godotenv.Load()
 		if err != nil {
 			fmt.Println("error loading .env file")
 		}
 
-		// logger = config.Logger()
+		logger = config.Logger()
 	}
 
 	g := gin.Default()
+	g.Use(config.CORSMiddleware())
 	g.Use(requestid.New())
-
-	pprof.Register(g)
 
 	d := config.BuildProject()
 	svr := server.NewServer(g, d)
 
 	svr.MapRoutes()
 	if err := svr.SetupDB(); err != nil {
-		log.Fatal("Databases failed to start" + err.Error())
+		logger.Error("Databases failed to start" + err.Error())
 		return err
 	}
 
+	defer logger.Sync()
 	return svr.Start()
 }

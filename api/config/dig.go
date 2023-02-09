@@ -13,6 +13,7 @@ func BuildProject() *dig.Container {
 
 	// configuration
 	container.Provide(InitializeDB)
+	container.Provide(Logger)
 
 	//Service
 	container.Provide(service.NewDataService)

@@ -1,4 +1,4 @@
-version: "3"
+version: "3.2"
 services:
   backend:
     build:
@@ -6,31 +6,32 @@ services:
       dockerfile: ./deploy/docker/Dockerfile
     container_name: ohlc-data-api
     env_file: ../.env
+    volumes:
+      - ./media/uploads
+      - ohlc-data:/media/uploads
     networks:
-      teas-network:
-        aliases:
-          - backend-redis
+      ohlc-api-network:
     depends_on:
       - postgresql
     ports:
-      - "3003:3000"
+      - "3000:3000"
 
   postgresql:
     image: postgres
-    container_name: backend-postgres
+    container_name: ohlc-postgres
     ports:
       - "5400:5432"
     env_file: ../.env
     volumes:
       - ./scripts/db/init.sh:/docker-entrypoint-initdb.d/init-user-db.sh
-      - teas-data:/var/lib/postgresql/data
+      - ohlc-data:/var/lib/postgresql/data
     restart: always
     networks:
-      teas-network:
+      ohlc-api-network:
         aliases:
-          - backend-postgres
+          - ohlc-postgres
 
 networks:
-  teas-network: null
+  ohlc-api-network: null
 volumes:
-  teas-data: null
+  ohlc-data: null

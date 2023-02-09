@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"math"
+	"ohlc-data-api/api/dto"
 	"ohlc-data-api/api/models"
 
 	"gorm.io/gorm"
@@ -8,7 +10,7 @@ import (
 
 type DataRepo interface {
 	Create(data []*models.Data) error
-	Retrieve() (dataList []*models.Data, err error)
+	Retrieve(queryParams *dto.SearchParams) (dataList map[string]interface{}, err error)
 }
 
 type repo struct {
@@ -26,7 +28,25 @@ func (r *repo) Create(data []*models.Data) error {
 	return nil
 }
 
-func (r *repo) Retrieve() (dataList []*models.Data, err error) {
+func (r *repo) Retrieve(queryParams *dto.SearchParams) (dataList map[string]interface{}, err error) {
 
-	return nil, nil
+	var data []models.Data
+
+	offset := (queryParams.PageNum - 1) * queryParams.PageSize
+	sqlBuilder := r.db.Limit(queryParams.PageSize).Offset(offset).Order(queryParams.Sort)
+	if err = sqlBuilder.Model(&models.Data{}).Where(queryParams.Search).Find(&data).Error; err != nil {
+		return nil, err
+	}
+
+	var totalCount int64
+	r.db.Model(&models.Data{}).Count(&totalCount)
+
+	res := make(map[string]interface{})
+	res["data"] = data
+	res["page_size"] = queryParams.PageSize
+	res["sort"] = queryParams.Sort
+	res["total_pages"] = int(math.Ceil(float64(totalCount) / float64(queryParams.PageSize)))
+	res["total_count"] = totalCount
+
+	return res, nil
 }

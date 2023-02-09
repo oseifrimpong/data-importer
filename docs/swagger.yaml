@@ -1,3 +1,4 @@
+basePath: /api/v1
 definitions:
   dto.APIResponse:
     properties:
@@ -5,12 +6,59 @@ definitions:
       message:
         type: string
       status_code:
-        example: "0"
-        type: string
+        type: integer
     type: object
+host: localhost:3000
 info:
-  contact: {}
+  contact:
+    email: support@coinhako.io
+    name: CoinHako Support
+    url: https://help.coinhako.com/
+  description: This is a data API for processing and uploading OHLC data.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: OHLC Data API
+  version: "1.0"
 paths:
+  /data:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: Uploads csv data into database
+      parameters:
+      - description: Request Body
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.APIResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/dto.APIResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/dto.APIResponse'
+      summary: Uploads csv data into database
+      tags:
+      - v1
   /healthcheck:
     get:
       consumes:
@@ -42,4 +90,51 @@ paths:
       summary: Show the status of server.
       tags:
       - root
+  /v1/data:
+    get:
+      consumes:
+      - application/json
+      description: Search data by using the query parameters
+      parameters:
+      - description: page_num
+        in: query
+        name: page_num
+        type: string
+      - description: page_size
+        in: query
+        name: page_size
+        type: string
+      - description: sort_field ASC | DESC
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.APIResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/dto.APIResponse'
+      summary: Search all data
+      tags:
+      - v1
+schemes:
+- https
+- http
 swagger: "2.0"

@@ -11,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"go.uber.org/zap"
 
 	// swagger embed files
 
@@ -29,17 +30,16 @@ func (ds *dserver) MapRoutes() {
 func (ds *dserver) dataRoutes(api *gin.RouterGroup) {
 	u := api.Group("/")
 	{
-		// var logger *zap.Logger
-		// ds.cont.Invoke(func(l *zap.Logger) {
-		// 	logger = l
-		// })
+		var logger *zap.Logger
 		var dataSvc service.DataService
-		ds.cont.Invoke(func(svc service.DataService) {
+		ds.cont.Invoke(func(svc service.DataService, l *zap.Logger) {
 			dataSvc = svc
+			logger = l
+
 		})
 
-		svc := delivery.NewDataController(dataSvc)
-		// u.GET("/data", svc.Get)
+		svc := delivery.NewDataController(dataSvc, logger)
+		u.GET("/data", svc.Retrieve)
 		u.POST("/data", svc.Create)
 	}
 }
@@ -54,7 +54,7 @@ func (ds *dserver) dataRoutes(api *gin.RouterGroup) {
 // @Failure 400,404 {object} dto.APIResponse
 // @Failure 500 {object} dto.APIResponse
 // @Failure default {object} dto.APIResponse
-// @Router api/healthcheck [get]
+// @Router /healthcheck [get]
 func (ds *dserver) root(api *gin.RouterGroup) {
 	h := api.Group("/")
 	{
